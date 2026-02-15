@@ -127,4 +127,72 @@ class EmailNotificationProviderTest {
 
         assertThrows(ValidationException.class, () -> badProvider.send(notification));
     }
+
+    @Test
+    void testSendWithLongSubject() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL)
+                .recipient("test@example.com")
+                .subject("A".repeat(300)) // Very long subject
+                .body("Body")
+                .build();
+
+        // Should handle long subjects gracefully
+        assertDoesNotThrow(() -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithSpecialCharactersInBody() throws NotificationException {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL)
+                .recipient("test@example.com")
+                .subject("Test")
+                .body("Body with special chars: <>&\"'")
+                .build();
+
+        NotificationResult result = provider.send(notification);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    void testProviderConfigWithNullConfig() {
+        assertThrows(IllegalArgumentException.class, 
+                () -> new EmailNotificationProvider(null));
+    }
+
+    @Test
+    void testSendWithNullBody() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL)
+                .recipient("test@example.com")
+                .subject("Test")
+                .body(null)
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithNullRecipient() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL)
+                .recipient(null)
+                .subject("Test")
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithWrongChannel() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.SMS) // Wrong channel
+                .recipient("test@example.com")
+                .subject("Test")
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
 }

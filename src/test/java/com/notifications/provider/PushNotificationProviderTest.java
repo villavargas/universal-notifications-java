@@ -79,4 +79,82 @@ class PushNotificationProviderTest {
     void testIsConfigured() {
         assertTrue(provider.isConfigured());
     }
+
+    @Test
+    void testSendWithTooLongTitle() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.PUSH)
+                .recipient("device-token-" + "x".repeat(32))
+                .subject("A".repeat(100)) // Too long title
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithTooLongBody() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.PUSH)
+                .recipient("device-token-" + "x".repeat(32))
+                .subject("Title")
+                .body("A".repeat(500)) // Too long body
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testProviderConfigWithNullConfig() {
+        assertThrows(IllegalArgumentException.class, 
+                () -> new PushNotificationProvider(null));
+    }
+
+    @Test
+    void testSendWithShortDeviceToken() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.PUSH)
+                .recipient("short-token")
+                .subject("Title")
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithNullBody() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.PUSH)
+                .recipient("device-token-" + "x".repeat(32))
+                .subject("Title")
+                .body(null)
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithNullRecipient() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.PUSH)
+                .recipient(null)
+                .subject("Title")
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithWrongChannel() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL) // Wrong channel
+                .recipient("device-token-" + "x".repeat(32))
+                .subject("Title")
+                .body("Body")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
 }

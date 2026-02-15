@@ -97,4 +97,66 @@ class SmsNotificationProviderTest {
         assertNotNull(result);
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    void testSendWithTooLongBody() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.SMS)
+                .recipient("+15559876543")
+                .body("A".repeat(2000)) // Too long for SMS
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testProviderConfigWithNullConfig() {
+        assertThrows(IllegalArgumentException.class, 
+                () -> new SmsNotificationProvider(null));
+    }
+
+    @Test
+    void testSendWithShortBody() throws NotificationException {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.SMS)
+                .recipient("+15559876543")
+                .body("OK")
+                .build();
+
+        NotificationResult result = provider.send(notification);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    void testSendWithNullBody() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.SMS)
+                .recipient("+15559876543")
+                .body(null)
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithNullRecipient() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.SMS)
+                .recipient(null)
+                .body("Test")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
+
+    @Test
+    void testSendWithWrongChannel() {
+        Notification notification = Notification.builder()
+                .channel(NotificationChannel.EMAIL) // Wrong channel
+                .recipient("+15559876543")
+                .body("Test")
+                .build();
+
+        assertThrows(ValidationException.class, () -> provider.send(notification));
+    }
 }
