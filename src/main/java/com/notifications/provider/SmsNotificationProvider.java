@@ -27,9 +27,10 @@ public class SmsNotificationProvider extends AbstractNotificationProvider {
         Map<String, Object> request = buildSmsRequest(notification);
         log.info("Simulated SMS request: {}", request);
         
-        if (Math.random() < 0.03) {
-            throw new ProviderException("Simulated error: Invalid phone number");
-        }
+        // Uncomment to simulate random errors (3% chance)
+        // if (Math.random() < 0.03) {
+        //     throw new ProviderException("Simulated error: Invalid phone number");
+        // }
         
         int segments = calculateSmsSegments(notification.getBody());
         Map<String, Object> metadata = new HashMap<>();

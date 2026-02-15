@@ -28,9 +28,10 @@ public class PushNotificationProvider extends AbstractNotificationProvider {
         Map<String, Object> request = buildPushRequest(notification);
         log.info("Simulated push request: {}", request);
         
-        if (Math.random() < 0.02) {
-            throw new ProviderException("Simulated error: Invalid device token");
-        }
+        // Uncomment to simulate random errors (2% chance)
+        // if (Math.random() < 0.02) {
+        //     throw new ProviderException("Simulated error: Invalid device token");
+        // }
         
         return NotificationResult.builder()
                 .notificationId(notification.getId())
