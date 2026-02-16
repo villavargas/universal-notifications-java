@@ -17,6 +17,16 @@ public class NotificationException extends Exception {
         this.errorType = errorType;
     }
     
+    // Convenience constructor - defaults to UNKNOWN_ERROR
+    public NotificationException(String message) {
+        this(message, ErrorType.UNKNOWN_ERROR);
+    }
+    
+    // Convenience constructor - defaults to UNKNOWN_ERROR
+    public NotificationException(String message, Throwable cause) {
+        this(message, cause, ErrorType.UNKNOWN_ERROR);
+    }
+    
     public ErrorType getErrorType() {
         return errorType;
     }

@@ -90,4 +90,22 @@ public class ProviderConfig {
             throw new IllegalArgumentException("API key is required for " + providerName);
         }
     }
+    
+    /**
+     * Gets a property with a default value
+     */
+    public String getProperty(String key, String defaultValue) {
+        if (properties == null) {
+            return defaultValue;
+        }
+        Object value = properties.get(key);
+        return value != null ? value.toString() : defaultValue;
+    }
+    
+    /**
+     * Gets a property (may return null)
+     */
+    public String getProperty(String key) {
+        return getProperty(key, null);
+    }
 }
