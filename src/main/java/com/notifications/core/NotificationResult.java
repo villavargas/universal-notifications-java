@@ -107,6 +107,34 @@ public class NotificationResult {
     }
     
     /**
+     * Creates a composite result from multiple individual results with total attempted count.
+     * This is useful when some notifiers failed and are not included in results.
+     * Success is true only if ALL attempted notifiers succeeded.
+     * 
+     * @param results individual successful results from notifiers
+     * @param totalAttempted total number of notifiers that were attempted
+     * @return composite result
+     */
+    public static NotificationResult composite(List<NotificationResult> results, int totalAttempted) {
+        if (results == null || results.isEmpty()) {
+            return NotificationResult.builder()
+                    .success(false)
+                    .message(String.format("Sent to 0/%d notifiers", totalAttempted))
+                    .build();
+        }
+        
+        boolean allSuccess = results.size() == totalAttempted && 
+                results.stream().allMatch(NotificationResult::isSuccess);
+        long successCount = results.stream().filter(NotificationResult::isSuccess).count();
+        
+        return NotificationResult.builder()
+                .success(allSuccess)
+                .message(String.format("Sent to %d/%d notifiers", successCount, totalAttempted))
+                .individualResults(new ArrayList<>(results))
+                .build();
+    }
+    
+    /**
      * Creates a result indicating the Notify instance was disabled.
      * 
      * @return disabled result

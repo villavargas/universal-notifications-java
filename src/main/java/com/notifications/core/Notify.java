@@ -224,7 +224,7 @@ public class Notify implements Notifier {
         
         log.info("Successfully sent to {}/{} notifiers", results.size(), notifiers.size());
         
-        return NotificationResult.composite(results);
+        return NotificationResult.composite(results, notifiers.size());
     }
     
     /**
