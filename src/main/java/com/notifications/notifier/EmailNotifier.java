@@ -15,25 +15,14 @@ import java.util.UUID;
  * Email notifier implementation.
  * Inspired by Go's mail service pattern.
  * 
- * This notifier:
- * - Uses subject parameter as email subject
- * - Uses message parameter as email body
- * - Can have multiple receivers
- * - Simulates sending via configured provider (SendGrid, Mailgun, etc.)
- * 
- * Example usage:
- * <pre>
- * Notifier emailNotifier = EmailNotifier.builder()
- *     .providerName("SendGrid")
- *     .senderAddress("noreply@example.com")
- *     .senderName("My App")
- *     .addReceiver("user@example.com")
- *     .build();
- * 
- * emailNotifier.send("Welcome", "Hello World!");
- * </pre>
+ * @deprecated This class has been moved to {@link com.notifications.service.email.EmailNotifier}.
+ *             This version is kept for backward compatibility.
+ *             For new code, use the service-based notifiers from the service package.
+ * @see com.notifications.service.email.EmailNotifier
+ * @see com.notifications.service.email.SendGridNotifier
  */
 @Slf4j
+@Deprecated(since = "2.0.0", forRemoval = false)
 public class EmailNotifier implements Notifier {
     
     private final String providerName;
@@ -50,28 +39,16 @@ public class EmailNotifier implements Notifier {
         this.usePlainText = builder.usePlainText;
     }
     
-    /**
-     * Creates a new builder for EmailNotifier.
-     * 
-     * @return new builder
-     */
     public static Builder builder() {
         return new Builder();
     }
     
-    /**
-     * Creates an EmailNotifier from a ProviderConfig.
-     * 
-     * @param config the provider configuration
-     * @return configured EmailNotifier
-     */
     public static EmailNotifier fromConfig(ProviderConfig config) {
         Builder builder = builder()
             .providerName(config.getProviderName())
             .senderAddress(config.getProperty("senderEmail", "noreply@example.com"))
             .senderName(config.getProperty("senderName", "Notification Service"));
         
-        // Add receivers if provided
         String receivers = config.getProperty("receivers", null);
         if (receivers != null) {
             for (String receiver : receivers.split(",")) {
@@ -82,12 +59,6 @@ public class EmailNotifier implements Notifier {
         return builder.build();
     }
     
-    /**
-     * Adds a receiver to this notifier.
-     * 
-     * @param emailAddress the email address to add
-     * @return this notifier for chaining
-     */
     public EmailNotifier addReceiver(String emailAddress) {
         if (emailAddress != null && !emailAddress.trim().isEmpty()) {
             receiverAddresses.add(emailAddress.trim());
@@ -95,12 +66,6 @@ public class EmailNotifier implements Notifier {
         return this;
     }
     
-    /**
-     * Adds multiple receivers to this notifier.
-     * 
-     * @param emailAddresses the email addresses to add
-     * @return this notifier for chaining
-     */
     public EmailNotifier addReceivers(String... emailAddresses) {
         for (String email : emailAddresses) {
             addReceiver(email);
@@ -118,7 +83,6 @@ public class EmailNotifier implements Notifier {
                 providerName, receiverAddresses.size(), subject);
         
         try {
-            // Simulate sending email
             simulateEmailSend(subject, message);
             
             String providerId = providerName.toLowerCase() + "-" + UUID.randomUUID();
@@ -140,7 +104,6 @@ public class EmailNotifier implements Notifier {
     }
     
     private void simulateEmailSend(String subject, String message) {
-        // Simulate API call delay
         try {
             Thread.sleep(100 + (long) (Math.random() * 100));
         } catch (InterruptedException e) {
@@ -153,9 +116,6 @@ public class EmailNotifier implements Notifier {
                 usePlainText ? "plain" : "html");
     }
     
-    /**
-     * Builder for EmailNotifier
-     */
     public static class Builder {
         private String providerName = "SMTP";
         private String senderAddress;
