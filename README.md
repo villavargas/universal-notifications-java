@@ -107,6 +107,12 @@ docker run notifications-library
 docker-compose up
 ```
 
+**Ejecución en Docker:**
+
+![Ejecución en Docker](docs/execution-examples-docker.png)
+
+La imagen muestra la ejecución exitosa de la librería dentro de un contenedor Docker, demostrando la portabilidad completa de la aplicación.
+
 ## 🏗️ Patrones de Diseño Aplicados
 
 La librería implementa múltiples patrones de diseño para garantizar un código limpio, mantenible y extensible:
