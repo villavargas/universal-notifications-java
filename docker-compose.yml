@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  notifications-library:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: notifications-library:latest
+    container_name: notifications-library-demo
+    environment:
+      - JAVA_OPTS=-Xmx512m -Xms256m
+      - LOG_LEVEL=INFO
+    volumes:
+      # Optional: Mount reports directory to view coverage reports
+      - ./target/site/jacoco:/app/reports/jacoco:ro
+    restart: unless-stopped
+    
+  # Optional: Future service for REST API demo
+  # notifications-api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.api
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=demo
