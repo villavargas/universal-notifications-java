@@ -544,38 +544,11 @@ try {
 6. **Configurar Timeouts**: Establecer valores de timeout apropiados en la configuración del provider
 7. **Monitorear Salud**: Verificar periódicamente la salud del provider con \`isChannelSupported()\`
 
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Por favor sigue estos pasos:
-
-1. Fork el repositorio
-2. Crea una rama de feature (\`git checkout -b feature/amazing-feature\`)
-3. Commit tus cambios (\`git commit -m 'Add amazing feature'\`)
-4. Push a la rama (\`git push origin feature/amazing-feature\`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ## 👥 Autor
 
 **Luis Alejandro Villa Vargas** - *Software Engineer* - Librería de notificaciones multi-canal para Java
 
-## 🙏 Agradecimientos
 
-- Construido con ❤️ usando Java 21
-- Inspirado en principios de arquitectura limpia y patrones de diseño SOLID
-- Enfoque framework-agnostic para máxima flexibilidad
-
-## 📞 Soporte
-
-Si tienes preguntas o necesitas ayuda:
-
-- 🐛 Issues: [GitHub Issues](https://github.com/luisvilla8/notifications-library/issues)
-- 📚 Documentación: Ver los ejemplos en \`src/examples/\`
-- 📧 Email: Contacto a través de GitHub
-
----
 
 **Hecho con ☕ y Java 21 | Framework-Agnostic | Production-Ready**
